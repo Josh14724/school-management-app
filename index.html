@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EduManage | School Management</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      background: #f5f7fb;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1050px;
+      min-height: 620px;
+      background: white;
+      border-radius: 24px;
+      overflow: hidden;
+      display: flex;
+      box-shadow: 0 15px 50px rgba(0, 0, 0, 0.08);
+    }
+
+    .welcome {
+      width: 50%;
+      background: #173f35;
+      color: white;
+      padding: 55px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .welcome::before {
+      content: "";
+      width: 300px;
+      height: 300px;
+      border: 60px solid rgba(255,255,255,0.06);
+      border-radius: 50%;
+      position: absolute;
+      right: -120px;
+      top: -80px;
+    }
+
+    .welcome::after {
+      content: "";
+      width: 250px;
+      height: 250px;
+      border: 45px solid rgba(255,255,255,0.05);
+      border-radius: 50%;
+      position: absolute;
+      left: -120px;
+      bottom: -100px;
+    }
+
+    .logo {
+      font-size: 27px;
+      font-weight: 800;
+      margin-bottom: 70px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .logo span {
+      color: #8dd6b5;
+    }
+
+    .welcome h1 {
+      font-size: 42px;
+      line-height: 1.15;
+      margin-bottom: 20px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .welcome p {
+      font-size: 16px;
+      line-height: 1.7;
+      color: #d6e8e1;
+      max-width: 420px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .features {
+      margin-top: 35px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .feature {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 15px 0;
+      color: #e5f1ed;
+    }
+
+    .check {
+      width: 25px;
+      height: 25px;
+      border-radius: 50%;
+      background: #8dd6b5;
+      color: #173f35;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+    }
+
+    .login {
+      width: 50%;
+      padding: 55px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .login h2 {
+      color: #182c28;
+      font-size: 30px;
+      margin-bottom: 10px;
+    }
+
+    .subtitle {
+      color: #7b8783;
+      margin-bottom: 35px;
+    }
+
+    label {
+      display: block;
+      color: #35433f;
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .input-box {
+      margin-bottom: 20px;
+    }
+
+    input,
+    select {
+      width: 100%;
+      height: 52px;
+      border: 1px solid #dce4e1;
+      border-radius: 10px;
+      padding: 0 15px;
+      font-size: 15px;
+      outline: none;
+      background: #fbfcfc;
+    }
+
+    input:focus,
+    select:focus {
+      border-color: #4b9b7c;
+      background: white;
+    }
+
+    .password-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .forgot {
+      color: #3f8c70;
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    .login-btn {
+      width: 100%;
+      height: 53px;
+      border: none;
+      border-radius: 10px;
+      background: #3f8c70;
+      color: white;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 8px;
+      transition: 0.2s;
+    }
+
+    .login-btn:hover {
+      background: #32765d;
+      transform: translateY(-1px);
+    }
+
+    .demo {
+      text-align: center;
+      margin-top: 22px;
+      font-size: 13px;
+      color: #8a9692;
+    }
+
+    @media (max-width: 800px) {
+      .container {
+        flex-direction: column;
+        max-width: 520px;
+      }
+
+      .welcome,
+      .login {
+        width: 100%;
+      }
+
+      .welcome {
+        padding: 40px 30px;
+        min-height: 380px;
+      }
+
+      .login {
+        padding: 40px 30px;
+      }
+
+      .logo {
+        margin-bottom: 35px;
+      }
+
+      .welcome h1 {
+        font-size: 32px;
+      }
+
+      .features {
+        display: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+
+    <section class="welcome">
+      <div class="logo">
+        Edu<span>Manage</span>
+      </div>
+
+      <h1>Manage your school smarter.</h1>
+
+      <p>
+        One simple platform to manage students, teachers,
+        attendance, classes, results and everyday school activities.
+      </p>
+
+      <div class="features">
+        <div class="feature">
+          <div class="check">✓</div>
+          Student management
+        </div>
+
+        <div class="feature">
+          <div class="check">✓</div>
+          Attendance tracking
+        </div>
+
+        <div class="feature">
+          <div class="check">✓</div>
+          Results and reports
+        </div>
+      </div>
+    </section>
+
+    <section class="login">
+
+      <h2>Welcome back</h2>
+
+      <p class="subtitle">
+        Sign in to your school dashboard
+      </p>
+
+      <form onsubmit="loginUser(event)">
+
+        <div class="input-box">
+          <label>Email address</label>
+          <input
+            type="email"
+            id="email"
+            placeholder="Enter your email"
+            required
+          >
+        </div>
+
+        <div class="input-box">
+          <div class="password-row">
+            <label>Password</label>
+            <span class="forgot">Forgot password?</span>
+          </div>
+
+          <input
+            type="password"
+            id="password"
+            placeholder="Enter your password"
+            required
+          >
+        </div>
+
+        <div class="input-box">
+          <label>Login as</label>
+
+          <select id="role">
+            <option value="admin">Administrator</option>
+            <option value="teacher">Teacher</option>
+            <option value="student">Student</option>
+            <option value="parent">Parent</option>
+          </select>
+        </div>
+
+        <button class="login-btn" type="submit">
+          Sign In
+        </button>
+
+      </form>
+
+      <p class="demo">
+        EduManage School Management System
+      </p>
+
+    </section>
+
+  </div>
+
+  <script>
+    function loginUser(event) {
+      event.preventDefault();
+
+      const email = document.getElementById("email").value;
+      const role = document.getElementById("role").value;
+
+      if (email) {
+        alert(
+          "Welcome to EduManage!\\n\\n" +
+          "Logged in as: " +
+          role
+        );
+      }
+    }
+  </script>
+
+</body>
+  </html>
