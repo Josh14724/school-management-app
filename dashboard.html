@@ -487,7 +487,42 @@
   <!-- MAIN -->
 
   <main class="main">
+<!-- ACCESS REQUESTS -->
+<section class="section">
+    <div class="section-header">
+        <div>
+            <h2>Access Requests</h2>
+            <p>Review and approve new students, teachers and parents.</p>
+        </div>
+    </div>
 
+    <div id="accessRequests">
+        <p style="color:#8a9692;">Loading requests...</p>
+    </div>
+</section>
+
+<script>
+async function loadAccessRequests() {
+    const container = document.getElementById("accessRequests");
+
+    // Temporary message until we connect the database
+    container.innerHTML = `
+        <div style="
+            background:#f5f7f8;
+            padding:20px;
+            border-radius:12px;
+            margin-top:15px;
+        ">
+            <strong>No pending requests</strong>
+            <p style="margin-top:8px;color:#8a9692;">
+                New account requests will appear here.
+            </p>
+        </div>
+    `;
+}
+
+loadAccessRequests();
+</script>
     <header class="topbar">
 
       <div class="page-title">
@@ -710,7 +745,17 @@
       </div>
 
     </section>
+<!-- ACCESS REQUESTS -->
+<section class="card" id="access-requests-section">
+    <div class="card-header">
+        <h3>Access Requests</h3>
+        <span class="status">Pending</span>
+    </div>
 
+    <div id="accessRequests">
+        <p>Loading access requests...</p>
+    </div>
+</section>
   </main>
 
 </div>
