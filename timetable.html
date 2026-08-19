@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EduManage | Timetable</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: #f5f7f8;
+      color: #1c302a;
+    }
+
+    .layout {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      width: 250px;
+      background: #173f35;
+      color: white;
+      padding: 25px 15px;
+      position: fixed;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      overflow-y: auto;
+    }
+
+    .logo {
+      font-size: 25px;
+      font-weight: 800;
+      padding: 0 15px;
+      margin-bottom: 40px;
+    }
+
+    .logo span {
+      color: #8dd6b5;
+    }
+
+    .menu-title {
+      font-size: 11px;
+      color: #9db8ae;
+      margin: 20px 15px 10px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 13px;
+      padding: 13px 15px;
+      margin: 5px 0;
+      border-radius: 9px;
+      color: #d7e6e1;
+      cursor: pointer;
+      font-size: 14px;
+      text-decoration: none;
+    }
+
+    .nav-item:hover,
+    .nav-item.active {
+      background: #2d6857;
+      color: white;
+    }
+
+    .nav-icon {
+      width: 22px;
+      text-align: center;
+      font-size: 17px;
+    }
+
+    .main {
+      margin-left: 250px;
+      width: calc(100% - 250px);
+    }
+
+    .topbar {
+      height: 80px;
+      background: white;
+      border-bottom: 1px solid #e6ece9;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 35px;
+    }
+
+    .page-title h1 {
+      font-size: 23px;
+    }
+
+    .page-title p {
+      font-size: 13px;
+      color: #84908c;
+      margin-top: 4px;
+    }
+
+    .profile {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .avatar {
+      width: 40px;
+      height: 40px;
+      background: #d9eee6;
+      color: #2e765d;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+    }
+
+    .profile-info strong {
+      display: block;
+      font-size: 13px;
+    }
+
+    .profile-info span {
+      font-size: 11px;
+      color: #8a9692;
+    }
+
+    .content {
+      padding: 30px 35px;
+    }
+
+    .page-heading {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 25px;
+      gap: 20px;
+    }
+
+    .page-heading h2 {
+      font-size: 22px;
+    }
+
+    .page-heading p {
+      color: #84908c;
+      font-size: 13px;
+      margin-top: 5px;
+    }
+
+    .controls {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    select,
+    input {
+      height: 44px;
+      border: 1px solid #dce5e1;
+      border-radius: 8px;
+      padding: 0 12px;
+      background: white;
+      outline: none;
+    }
+
+    .add-btn {
+      border: none;
+      background: #3f8c70;
+      color: white;
+      padding: 13px 18px;
+      border-radius: 9px;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 13px;
+    }
+
+    .add-btn:hover {
+      background: #32765d;
+    }
+
+    .timetable-card {
+      background: white;
+      border: 1px solid #e7eeeb;
+      border-radius: 14px;
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      min-width: 950px;
+      border-collapse: collapse;
+    }
+
+    th {
+      background: #f8faf9;
+      color: #71807a;
+      font-size: 11px;
+      padding: 15px;
+      text-align: center;
+      text-transform: uppercase;
+    }
+
+    td {
+      border-top: 1px solid #edf1ef;
+      border-right: 1px solid #edf1ef;
+      padding: 8px;
+      min-width: 150px;
+      height: 105px;
+      vertical-align: top;
+    }
+
+    .time-cell {
+      width: 105px;
+      min-width: 105px;
+      text-align: center;
+      vertical-align: middle;
+      background: #fafcfc;
+      color: #71807a;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .lesson {
+      background: #edf6f2;
+      border-left: 4px solid #3f8c70;
+      border-radius: 8px;
+      padding: 10px;
+      height: 100%;
+      position: relative;
+    }
+
+    .lesson-name {
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .lesson-teacher {
+      font-size: 11px;
+      color: #668078;
+      margin-top: 5px;
+    }
+
+    .lesson-room {
+      font-size: 10px;
+      color: #8a9692;
+      margin-top: 4px;
+    }
+
+    .delete-lesson {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      font-size: 12px;
+      opacity: .6;
+    }
+
+    .delete-lesson:hover {
+      opacity: 1;
+    }
+
+    /* MODAL */
+
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(20, 40, 34, .45);
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 100;
+    }
+
+    .modal-box {
+      width: 100%;
+      max-width: 500px;
+      background: white;
+      border-radius: 15px;
+      padding: 25px;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 25px;
+    }
+
+    .modal-header h3 {
+      font-size: 19px;
+    }
+
+    .close {
+      border: none;
+      background: none;
+      font-size: 23px;
+      cursor: pointer;
+      color: #71807a;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 12px;
+      font-weight: 700;
+      margin-bottom: 7px;
+    }
+
+    .form-group input,
+    .form-group select {
+      width: 100%;
+      height: 45px;
+      border: 1px solid #dce5e1;
+      border-radius: 8px;
+      padding: 0 12px;
+      outline: none;
+      background: white;
+    }
+
+    .save-btn {
+      width: 100%;
+      height: 47px;
+      border: none;
+      background: #3f8c70;
+      color: white;
+      border-radius: 8px;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 5px;
+    }
+
+    @media (max-width: 800px) {
+
+      .sidebar {
+        width: 70px;
+        padding: 20px 8px;
+      }
+
+      .logo {
+        font-size: 0;
+        text-align: center;
+        padding: 0;
+      }
+
+      .logo::after {
+        content: "E";
+        font-size: 25px;
+      }
+
+      .menu-title,
+      .nav-item span:not(.nav-icon) {
+        display: none;
+      }
+
+      .nav-item {
+        justify-content: center;
+        padding: 13px 5px;
+      }
+
+      .main {
+        margin-left: 70px;
+        width: calc(100% - 70px);
+      }
+
+      .topbar {
+        padding: 0 18px;
+      }
+
+      .profile-info {
+        display: none;
+      }
+
+      .content {
+        padding: 20px 15px;
+      }
+
+      .page-heading {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .controls {
+        width: 100%;
+        flex-wrap: wrap;
+      }
+
+      .controls select {
+        flex: 1;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="layout">
+
+  <aside class="sidebar">
+
+    <div class="logo">
+      Edu<span>Manage</span>
+    </div>
+
+    <div class="menu-title">Main</div>
+
+    <a href="dashboard.html" class="nav-item">
+      <span class="nav-icon">⌂</span>
+      <span>Dashboard</span>
+    </a>
+
+    <a href="students.html" class="nav-item">
+      <span class="nav-icon">👨‍🎓</span>
+      <span>Students</span>
+    </a>
+
+    <a href="teachers.html" class="nav-item">
+      <span class="nav-icon">👨‍🏫</span>
+      <span>Teachers</span>
+    </a>
+
+    <a href="classes.html" class="nav-item">
+      <span class="nav-icon">🏫</span>
+      <span>Classes</span>
+    </a>
+
+    <div class="menu-title">Academics</div>
+
+    <a href="subjects.html" class="nav-item">
+      <span class="nav-icon">📚</span>
+      <span>Subjects</span>
+    </a>
+
+    <a href="timetable.html" class="nav-item">
+      <span class="nav-icon">📅</span>
+      <span>Timetable</span>
+    </a>
+
+    <a class="nav-item">
+      <span class="nav-icon">✓</span>
+      <span>Attendance</span>
+    </a>
+
+    <a class="nav-item">
+      <span class="nav-icon">📝</span>
+      <span>Results</span>
+    </a>
+
+    <div class="menu-title">System</div>
+
+    <a class="nav-item">
+      <span class="nav-icon">⚙</span>
+      <span>Settings</span>
+    </a>
+
+    <a href="index.html" class="nav-item">
+      <span class="nav-icon">↪</span>
+      <span>Logout</span>
+    </a>
+
+  </aside>
+
+
+  <main class="main">
+
+    <header class="topbar">
+
+      <div class="page-title">
+        <h1>Timetable</h1>
+        <p>Manage weekly school lessons.</p>
+      </div>
+
+      <div class="profile">
+
+        <div class="avatar">AJ</div>
+
+        <div class="profile-info">
+          <strong>Administrator</strong>
+          <span>School Admin</span>
+        </div>
+
+      </div>
+
+    </header>
+
+
+    <section class="content">
+
+      <div class="page-heading">
+
+        <div>
+          <h2>Weekly Timetable</h2>
+          <p>View and manage lessons for each class.</p>
+        </div>
+
+        <div class="controls">
+
+          <select id="classSelect" onchange="changeClass()">
+            <option>JSS 1A</option>
+            <option>JSS 2A</option>
+            <option>JSS 3A</option>
+            <option>SS 1A</option>
+            <option>SS 2A</option>
+            <option>SS 2B</option>
+          </select>
+
+          <button class="add-btn" onclick="openModal()">
+            + Add Lesson
+          </button>
+
+        </div>
+
+      </div>
+
+
+      <div class="timetable-card">
+
+        <table>
+
+          <thead>
+
+            <tr>
+              <th>Time</th>
+              <th>Monday</th>
+              <th>Tuesday</th>
+              <th>Wednesday</th>
+              <th>Thursday</th>
+              <th>Friday</th>
+            </tr>
+
+          </thead>
+
+          <tbody>
+
+            <tr>
+
+              <td class="time-cell">
+                8:00 – 9:00
+              </td>
+
+              <td>
+                <div class="lesson">
+                  <button class="delete-lesson" onclick="deleteLesson(this)">×</button>
+                  <div class="lesson-name">Mathematics</div>
+                  <div class="lesson-teacher">Mrs. Ada Okafor</div>
+                  <div class="lesson-room">Room 101</div>
+                </div>
+              </td>
+
+              <td>
+                <div class="lesson">
+                  <button class="delete-lesson" onclick="deleteLesson(this)">×</button>
+                  <div class="lesson-name">English</div>
+                  <div class="lesson-teacher">Mr. David Okoro</div>
+                  <div class="lesson-room">Room 102</div>
+                </div>
+              </td>
+
+              <td>
+                <div class="lesson">
+                  <button class="delete-lesson" onclick="deleteLesson(this)">×</button>
+                  <div class="lesson-name">Biology</div>
+                  <div class="lesson-teacher">Mrs. Chika Nwosu</div>
+                  <div class="lesson-room">Lab 1</div>
+                </div>
+              </td>
+
+              <td>
+                <div class="lesson">
+                  <button class="delete-lesson" onclick="deleteLesson(this)">×</button>
+                  <div class="lesson-name">Physics</div>
+                  <div class="lesson-teacher">Mr. Emeka Obi</div>
+                  <div class="lesson-room">Lab 2</div>
+                </div>
+              </td>
+
+              <td>
+                <div class="lesson">
+                  <button class="delete-lesson" onclick="deleteLesson(this)">×</button>
+                  <div class="lesson-name">Computer Science</div>
+                  <div class="lesson-teacher">Mr. John Michael</div>
+                  <div class="lesson-room">ICT Room</div>
+                </div>
+              </td>
+
+            </tr>
+
+
+            <tr>
+
+              <td class="time-cell">
+                9:00 – 10:00
+              </td>
+
+              <td>
+                <div class="lesson">
+                  <button class="delete-lesson" onclick="deleteLesson(this)">×</button>
+                  <div class="lesson-name">English</div>
+                  <div class="lesson-teacher">Mr. David Okoro</div>
+                  <div class="lesson-room">Room 102</div>
+                </div>
+              </td>
+
+              <td>
+                <div class="lesson">
+                  <button class="delete-lesson" onclick="deleteLesson(this)">×</button>
+                  <div class="lesson-name">Mathematics</div>
+                  <div class="lesson-teacher">Mrs. Ada Okafor</div>
+                  <div class="lesson-room">Room 101</div>
+                </div>
+              </td>
+
+              <td>
+                <div class="lesson">
+                  <button class="delete-lesson" onclick="deleteLesson(this)">×</button>
+                  <div class="lesson-name">Physics</div>
+                  <div class="lesson-teacher">Mr. Emeka Obi</div>
+                  <div class="lesson-room">Lab 2</div>
+                </div>
+              </td>
+
+              <td></td>
+
+              <td></td>
+
+            </tr>
+
+
+            <tr>
+
+              <td class="time-cell">
+                10:00 – 11:00
+              </td>
+
+              <td></td>
+
+              <td>
+                <div class="lesson">
+                  <button class="delete-lesson" onclick="deleteLesson(this)">×</button>
+                  <div class="lesson-name">Computer Science</div>
+                  <div class="lesson-teacher">Mr. John Michael</div>
+                  <div class="lesson-room">ICT Room</div>
+                </div>
+              </td>
+
+              <td></td>
+
+              <td>
+                <div class="lesson">
+                  <button class="delete-lesson" onclick="deleteLesson(this)">×</button>
+                  <div class="lesson-name">Mathematics</div>
+                  <div class="lesson-teacher">Mrs. Ada Okafor</div>
+                  <div class="lesson-room">Room 101</div>
+                </div>
+              </td>
+
+              <td></td>
+
+            </tr>
+
+
+            <tr>
+
+              <td class="time-cell">
+                11:00 – 11:30
+              </td>
+
+              <td colspan="5"
+                  style="text-align:center; vertical-align:middle; color:#84908c; background:#fafcfc;">
+                ☕ Break
+              </td>
+
+            </tr>
+
+
+            <tr>
+
+              <td class="time-cell">
+                11:30 – 12:30
+              </td>
+
+              <td>
+                <div class="lesson">
+                  <button class="delete-lesson" onclick="deleteLesson(this)">×</button>
+                  <div class="lesson-name">Civic Education</div>
+                  <div class="lesson-teacher">Mrs. Grace James</div>
+                  <div class="lesson-room">Room 103</div>
+                </div>
+              </td>
+
+              <td></td>
+
+              <td>
+                <div class="lesson">
+                  <button class="delete-lesson" onclick="deleteLesson(this)">×</button>
+                  <div class="lesson-name">English</div>
+                  <div class="lesson-teacher">Mr. David Okoro</div>
+                  <div class="lesson-room">Room 102</div>
+                </div>
+              </td>
+
+              <td></td>
+
+              <td>
+                <div class="lesson">
+                  <button class="delete-lesson" onclick="deleteLesson(this)">×</button>
+                  <div class="lesson-name">Biology</div>
+                  <div class="lesson-teacher">Mrs. Chika Nwosu</div>
+                  <div class="lesson-room">Lab 1</div>
+                </div>
+              </td>
+
+            </tr>
+
+
+            <tr>
+
+              <td class="time-cell">
+                12:30 – 1:30
+              </td>
+
+              <td>
+                <div class="lesson">
+                  <button class="delete-lesson" onclick="deleteLesson(this)">×</button>
+                  <div class="lesson-name">Basic Science</div>
+                  <div class="lesson-teacher">Mr. Emeka Obi</div>
+                  <div class="lesson-room">Room 104</div>
+                </div>
+              </td>
+
+              <td>
+                <div class="lesson">
+                  <button class="delete-lesson" onclick="deleteLesson(this)">×</button>
+                  <div class="lesson-name">Civic Education</div>
+                  <div class="lesson-teacher">Mrs. Grace James</div>
+                  <div class="lesson-room">Room 103</div>
+                </div>
+              </td>
+
+              <td></td>
+
+              <td>
+                <div class="lesson">
+                  <button class="delete-lesson" onclick="deleteLesson(this)">×</button>
+                  <div class="lesson-name">Computer Science</div>
+                  <div class="lesson-teacher">Mr. John Michael</div>
+                  <div class="lesson-room">ICT Room</div>
+                </div>
+              </td>
+
+              <td></td>
+
+            </tr>
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+    </section>
+
+  </main>
+
+</div>
+
+
+<!-- ADD LESSON MODAL -->
+
+<div class="modal" id="lessonModal">
+
+  <div class="modal-box">
+
+    <div class="modal-header">
+
+      <h3>Add New Lesson</h3>
+
+      <button class="close" onclick="closeModal()">
+        ×
+      </button>
+
+    </div>
+
+
+    <form onsubmit="addLesson(event)">
+
+      <div class="form-group">
+
+        <label>Day</label>
+
+        <select id="lessonDay" required>
+          <option value="">Select day</option>
+          <option>Monday</option>
+          <option>Tuesday</option>
+          <option>Wednesday</option>
+          <option>Thursday</option>
+          <option>Friday</option>
+        </select>
+
+      </div>
+
+
+      <div class="form-group">
+
+        <label>Time</label>
+
+        <select id="lessonTime" required>
+          <option value="">Select time</option>
+          <option>8:00 – 9:00</option>
+          <option>9:00 – 10:00</option>
+          <option>10:00 – 11:00</option>
+          <option>11:30 – 12:30</option>
+          <option>12:30 – 1:30</option>
+        </select>
+
+      </div>
+
+
+      <div class="form-group">
+
+        <label>Subject</label>
+
+        <select id="lessonSubject" required>
+          <option value="">Select subject</option>
+          <option>Mathematics</option>
+          <option>English</option>
+          <option>Biology</option>
+          <option>Physics</option>
+          <option>Computer Science</option>
+          <option>Civic Education</option>
+          <option>Basic Science</option>
+        </select>
+
+      </div>
+
+
+      <div class="form-group">
+
+        <label>Teacher</label>
+
+        <input
+          type="text"
+          id="lessonTeacher"
+          placeholder="Enter teacher"
+          required
+        >
+
+      </div>
+
+
+      <div class="form-group">
+
+        <label>Room</label>
+
+        <input
+          type="text"
+          id="lessonRoom"
+          placeholder="e.g. Room 101"
+          required
+        >
+
+      </div>
+
+
+      <button class="save-btn" type="submit">
+        Add Lesson
+      </button>
+
+    </form>
+
+  </div>
+
+</div>
+
+
+<script>
+
+  function openModal() {
+    document.getElementById("lessonModal").style.display = "flex";
+  }
+
+
+  function closeModal() {
+    document.getElementById("lessonModal").style.display = "none";
+  }
+
+
+  function deleteLesson(button) {
+
+    const confirmDelete =
+      confirm("Remove this lesson from the timetable?");
+
+    if (confirmDelete) {
+      button.closest(".lesson").remove();
+    }
+
+  }
+
+
+  function addLesson(event) {
+
+    event.preventDefault();
+
+    const day =
+      document.getElementById("lessonDay").value;
+
+    const time =
+      document.getElementById("lessonTime").value;
+
+    const subject =
+      document.getElementById("lessonSubject").value;
+
+    const teacher =
+      document.getElementById("lessonTeacher").value;
+
+    const room =
+      document.getElementById("lessonRoom").value;
+
+    alert(
+      subject +
+      " has been added to " +
+      day +
+      " at " +
+      time +
+      "."
+    );
+
+    document
+      .querySelector("#lessonModal form")
+      .reset();
+
+    closeModal();
+
+  }
+
+
+  function changeClass() {
+
+    const selected =
+      document.getElementById("classSelect").value;
+
+    alert(
+      "Showing timetable for " +
+      selected
+    );
+
+  }
+
+</script>
+
+</body>
+</html>
