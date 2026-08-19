@@ -487,6 +487,181 @@
   <!-- MAIN -->
 
   <main class="main">
+    <!-- ACCESS REQUESTS -->
+<section class="section" style="margin-bottom:30px;">
+    <div class="section-header">
+        <div>
+            <h2>Access Requests</h2>
+            <p>Review new student, teacher and parent accounts.</p>
+        </div>
+    </div>
+
+    <div id="accessRequests">
+        <p>Loading requests...</p>
+    </div>
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+const SUPABASE_URL =
+    "https://hakyydcvakiqisutknjn.supabase.co";
+
+const SUPABASE_PUBLISHABLE_KEY =
+    sb_publishable_nyfPuNJKYFJ3DmH1OoBafQ_qIXrRg...
+
+const supabaseClient = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_PUBLISHABLE_KEY
+);
+
+async function loadAccessRequests() {
+
+    const container = document.getElementById("accessRequests");
+
+    const { data, error } = await supabaseClient
+        .from("access_requests")
+        .select("*")
+        .eq("status", "pending")
+        .order("created_at", { ascending: false });
+
+    if (error) {
+        console.error(error);
+
+        container.innerHTML = `
+            <div style="padding:20px;background:#ffe5e5;border-radius:12px;color:#b42318;">
+                Unable to load access requests.
+            </div>
+        `;
+
+        return;
+    }
+
+    if (!data || data.length === 0) {
+        container.innerHTML = `
+            <div style="
+                padding:20px;
+                background:#f5f7f8;
+                border-radius:12px;
+                color:#66756f;
+            ">
+                No pending access requests.
+            </div>
+        `;
+        return;
+    }
+
+    container.innerHTML = data.map(request => `
+        <div style="
+            background:white;
+            border:1px solid #e1e7e4;
+            border-radius:14px;
+            padding:20px;
+            margin-bottom:15px;
+            box-shadow:0 2px 8px rgba(0,0,0,.04);
+        ">
+
+            <h3 style="margin:0 0 10px;">
+                ${escapeHtml(request.full_name)}
+            </h3>
+
+            <p style="margin:5px 0;">
+                <strong>Email:</strong>
+                ${escapeHtml(request.email)}
+            </p>
+
+            <p style="margin:5px 0;">
+                <strong>Phone:</strong>
+                ${escapeHtml(request.phone || "Not provided")}
+            </p>
+
+            <p style="margin:5px 0;">
+                <strong>Account:</strong>
+                ${escapeHtml(request.requested_role)}
+            </p>
+
+            <p style="margin:5px 0 15px;">
+                <strong>Status:</strong>
+                <span style="color:#c47a00;">Pending</span>
+            </p>
+
+            <button
+                onclick="approveRequest('${request.id}')"
+                style="
+                    background:#198754;
+                    color:white;
+                    border:0;
+                    padding:10px 18px;
+                    border-radius:8px;
+                    margin-right:8px;
+                    cursor:pointer;
+                ">
+                ✓ Approve
+            </button>
+
+            <button
+                onclick="rejectRequest('${request.id}')"
+                style="
+                    background:#dc3545;
+                    color:white;
+                    border:0;
+                    padding:10px 18px;
+                    border-radius:8px;
+                    cursor:pointer;
+                ">
+                ✕ Reject
+            </button>
+
+        </div>
+    `).join("");
+}
+
+
+async function approveRequest(id) {
+
+    const { error } = await supabaseClient
+        .from("access_requests")
+        .update({ status: "approved" })
+        .eq("id", id);
+
+    if (error) {
+        console.error(error);
+        alert("Unable to approve this request.");
+        return;
+    }
+
+    alert("Request approved successfully.");
+    loadAccessRequests();
+}
+
+
+async function rejectRequest(id) {
+
+    const { error } = await supabaseClient
+        .from("access_requests")
+        .update({ status: "rejected" })
+        .eq("id", id);
+
+    if (error) {
+        console.error(error);
+        alert("Unable to reject this request.");
+        return;
+    }
+
+    alert("Request rejected.");
+    loadAccessRequests();
+}
+
+
+function escapeHtml(value) {
+    const div = document.createElement("div");
+    div.textContent = value ?? "";
+    return div.innerHTML;
+}
+
+
+loadAccessRequests();
+</script>
 <!-- ACCESS REQUESTS -->
 <section class="section">
     <div class="section-header">
