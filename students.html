@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EduManage | Students</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: #f5f7f8;
+      color: #1c302a;
+    }
+
+    .layout {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* SIDEBAR */
+
+    .sidebar {
+      width: 250px;
+      background: #173f35;
+      color: white;
+      padding: 25px 15px;
+      position: fixed;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      overflow-y: auto;
+    }
+
+    .logo {
+      font-size: 25px;
+      font-weight: 800;
+      padding: 0 15px;
+      margin-bottom: 40px;
+    }
+
+    .logo span {
+      color: #8dd6b5;
+    }
+
+    .menu-title {
+      font-size: 11px;
+      color: #9db8ae;
+      margin: 20px 15px 10px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 13px;
+      padding: 13px 15px;
+      margin: 5px 0;
+      border-radius: 9px;
+      color: #d7e6e1;
+      cursor: pointer;
+      font-size: 14px;
+      text-decoration: none;
+    }
+
+    .nav-item:hover,
+    .nav-item.active {
+      background: #2d6857;
+      color: white;
+    }
+
+    .nav-icon {
+      width: 22px;
+      text-align: center;
+      font-size: 17px;
+    }
+
+    /* MAIN */
+
+    .main {
+      margin-left: 250px;
+      width: calc(100% - 250px);
+    }
+
+    .topbar {
+      height: 80px;
+      background: white;
+      border-bottom: 1px solid #e6ece9;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 35px;
+    }
+
+    .page-title h1 {
+      font-size: 23px;
+    }
+
+    .page-title p {
+      font-size: 13px;
+      color: #84908c;
+      margin-top: 4px;
+    }
+
+    .profile {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .avatar {
+      width: 40px;
+      height: 40px;
+      background: #d9eee6;
+      color: #2e765d;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+    }
+
+    .profile-info strong {
+      display: block;
+      font-size: 13px;
+    }
+
+    .profile-info span {
+      font-size: 11px;
+      color: #8a9692;
+    }
+
+    /* CONTENT */
+
+    .content {
+      padding: 30px 35px;
+    }
+
+    .page-heading {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 25px;
+    }
+
+    .page-heading h2 {
+      font-size: 22px;
+    }
+
+    .page-heading p {
+      color: #84908c;
+      font-size: 13px;
+      margin-top: 5px;
+    }
+
+    .add-btn {
+      border: none;
+      background: #3f8c70;
+      color: white;
+      padding: 13px 18px;
+      border-radius: 9px;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 13px;
+    }
+
+    .add-btn:hover {
+      background: #32765d;
+    }
+
+    /* SEARCH */
+
+    .toolbar {
+      background: white;
+      border: 1px solid #e7eeeb;
+      padding: 18px;
+      border-radius: 13px;
+      display: flex;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .search {
+      flex: 1;
+      position: relative;
+    }
+
+    .search input,
+    .toolbar select {
+      width: 100%;
+      height: 45px;
+      border: 1px solid #dce5e1;
+      border-radius: 8px;
+      padding: 0 14px;
+      outline: none;
+      background: #fbfcfc;
+    }
+
+    .toolbar select {
+      width: 180px;
+    }
+
+    .search input:focus,
+    .toolbar select:focus {
+      border-color: #4b9b7c;
+      background: white;
+    }
+
+    /* TABLE */
+
+    .table-card {
+      background: white;
+      border: 1px solid #e7eeeb;
+      border-radius: 13px;
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 800px;
+    }
+
+    th {
+      background: #f8faf9;
+      color: #71807a;
+      font-size: 11px;
+      text-align: left;
+      padding: 15px 18px;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+    }
+
+    td {
+      padding: 15px 18px;
+      border-top: 1px solid #edf1ef;
+      font-size: 13px;
+    }
+
+    .student-info {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+    }
+
+    .student-avatar {
+      width: 37px;
+      height: 37px;
+      border-radius: 50%;
+      background: #e6f2ed;
+      color: #397d65;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: bold;
+    }
+
+    .student-name {
+      font-weight: 700;
+    }
+
+    .student-email {
+      color: #8a9692;
+      font-size: 11px;
+      margin-top: 3px;
+    }
+
+    .status {
+      display: inline-block;
+      padding: 5px 9px;
+      border-radius: 20px;
+      background: #e5f4ec;
+      color: #367b61;
+      font-size: 10px;
+      font-weight: 600;
+    }
+
+    .actions {
+      display: flex;
+      gap: 7px;
+    }
+
+    .action-btn {
+      width: 31px;
+      height: 31px;
+      border: 1px solid #e1e8e5;
+      background: white;
+      border-radius: 7px;
+      cursor: pointer;
+    }
+
+    .action-btn:hover {
+      background: #f1f6f4;
+    }
+
+    .delete-btn:hover {
+      background: #fff0f0;
+    }
+
+    /* MODAL */
+
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(20, 40, 34, .45);
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 100;
+    }
+
+    .modal-box {
+      width: 100%;
+      max-width: 480px;
+      background: white;
+      border-radius: 15px;
+      padding: 25px;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 25px;
+    }
+
+    .modal-header h3 {
+      font-size: 19px;
+    }
+
+    .close {
+      border: none;
+      background: none;
+      font-size: 23px;
+      cursor: pointer;
+      color: #71807a;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 12px;
+      font-weight: 700;
+      margin-bottom: 7px;
+    }
+
+    .form-group input,
+    .form-group select {
+      width: 100%;
+      height: 45px;
+      border: 1px solid #dce5e1;
+      border-radius: 8px;
+      padding: 0 12px;
+      outline: none;
+    }
+
+    .save-btn {
+      width: 100%;
+      height: 47px;
+      border: none;
+      background: #3f8c70;
+      color: white;
+      border-radius: 8px;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 5px;
+    }
+
+    /* MOBILE */
+
+    @media (max-width: 700px) {
+
+      .sidebar {
+        width: 70px;
+        padding: 20px 8px;
+      }
+
+      .logo {
+        font-size: 0;
+        text-align: center;
+        padding: 0;
+      }
+
+      .logo::after {
+        content: "E";
+        font-size: 25px;
+      }
+
+      .menu-title,
+      .nav-item span:not(.nav-icon) {
+        display: none;
+      }
+
+      .nav-item {
+        justify-content: center;
+        padding: 13px 5px;
+      }
+
+      .main {
+        margin-left: 70px;
+        width: calc(100% - 70px);
+      }
+
+      .topbar {
+        padding: 0 18px;
+      }
+
+      .profile-info {
+        display: none;
+      }
+
+      .content {
+        padding: 20px 15px;
+      }
+
+      .page-heading {
+        align-items: flex-start;
+        gap: 15px;
+      }
+
+      .add-btn {
+        padding: 11px 12px;
+      }
+
+      .toolbar {
+        flex-direction: column;
+      }
+
+      .toolbar select {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="layout">
+
+  <!-- SIDEBAR -->
+
+  <aside class="sidebar">
+
+    <div class="logo">
+      Edu<span>Manage</span>
+    </div>
+
+    <div class="menu-title">Main</div>
+
+    <a href="dashboard.html" class="nav-item">
+      <span class="nav-icon">⌂</span>
+      <span>Dashboard</span>
+    </a>
+
+    <a href="students.html" class="nav-item active">
+      <span class="nav-icon">👨‍🎓</span>
+      <span>Students</span>
+    </a>
+
+    <a class="nav-item">
+      <span class="nav-icon">👨‍🏫</span>
+      <span>Teachers</span>
+    </a>
+
+    <a class="nav-item">
+      <span class="nav-icon">🏫</span>
+      <span>Classes</span>
+    </a>
+
+    <div class="menu-title">Academics</div>
+
+    <a class="nav-item">
+      <span class="nav-icon">📚</span>
+      <span>Subjects</span>
+    </a>
+
+    <a class="nav-item">
+      <span class="nav-icon">📅</span>
+      <span>Timetable</span>
+    </a>
+
+    <a class="nav-item">
+      <span class="nav-icon">✓</span>
+      <span>Attendance</span>
+    </a>
+
+    <a class="nav-item">
+      <span class="nav-icon">📝</span>
+      <span>Results</span>
+    </a>
+
+    <div class="menu-title">System</div>
+
+    <a class="nav-item">
+      <span class="nav-icon">⚙</span>
+      <span>Settings</span>
+    </a>
+
+    <a href="index.html" class="nav-item">
+      <span class="nav-icon">↪</span>
+      <span>Logout</span>
+    </a>
+
+  </aside>
+
+
+  <!-- MAIN -->
+
+  <main class="main">
+
+    <header class="topbar">
+
+      <div class="page-title">
+        <h1>Students</h1>
+        <p>Manage students and their information.</p>
+      </div>
+
+      <div class="profile">
+        <div class="avatar">AJ</div>
+
+        <div class="profile-info">
+          <strong>Administrator</strong>
+          <span>School Admin</span>
+        </div>
+      </div>
+
+    </header>
+
+
+    <section class="content">
+
+      <div class="page-heading">
+
+        <div>
+          <h2>All Students</h2>
+          <p>1,248 students registered in your school</p>
+        </div>
+
+        <button class="add-btn" onclick="openModal()">
+          + Add Student
+        </button>
+
+      </div>
+
+
+      <!-- SEARCH / FILTER -->
+
+      <div class="toolbar">
+
+        <div class="search">
+          <input
+            type="text"
+            id="searchInput"
+            placeholder="Search by student name or ID..."
+            onkeyup="searchStudents()"
+          >
+        </div>
+
+        <select id="classFilter" onchange="filterClass()">
+          <option value="all">All Classes</option>
+          <option value="JSS 1A">JSS 1A</option>
+          <option value="JSS 2A">JSS 2A</option>
+          <option value="JSS 3A">JSS 3A</option>
+          <option value="SS 1A">SS 1A</option>
+          <option value="SS 2B">SS 2B</option>
+        </select>
+
+      </div>
+
+
+      <!-- STUDENT TABLE -->
+
+      <div class="table-card">
+
+        <table>
+
+          <thead>
+            <tr>
+              <th>Student</th>
+              <th>Student ID</th>
+              <th>Class</th>
+              <th>Enrollment Date</th>
+              <th>Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+
+          <tbody id="studentTable">
+
+            <tr>
+              <td>
+                <div class="student-info">
+                  <div class="student-avatar">DA</div>
+                  <div>
+                    <div class="student-name">Daniel Adams</div>
+                    <div class="student-email">daniel@example.com</div>
+                  </div>
+                </div>
+              </td>
+              <td>STU-1001</td>
+              <td>JSS 3A</td>
+              <td>12 Jan 2026</td>
+              <td><span class="status">Active</span></td>
+              <td>
+                <div class="actions">
+                  <button class="action-btn">👁</button>
+                  <button class="action-btn delete-btn" onclick="deleteStudent(this)">🗑</button>
+                </div>
+              </td>
+            </tr>
+
+
+            <tr>
+              <td>
+                <div class="student-info">
+                  <div class="student-avatar">JM</div>
+                  <div>
+                    <div class="student-name">John Michael</div>
+                    <div class="student-email">john@example.com</div>
+                  </div>
+                </div>
+              </td>
+              <td>STU-1002</td>
+              <td>SS 2B</td>
+              <td>15 Jan 2026</td>
+              <td><span class="status">Active</span></td>
+              <td>
+                <div class="actions">
+                  <button class="action-btn">👁</button>
+                  <button class="action-btn delete-btn" onclick="deleteStudent(this)">🗑</button>
+                </div>
+              </td>
+            </tr>
+
+
+            <tr>
+              <td>
+                <div class="student-info">
+                  <div class="student-avatar">AN</div>
+                  <div>
+                    <div class="student-name">Amaka Nwosu</div>
+                    <div class="student-email">amaka@example.com</div>
+                  </div>
+                </div>
+              </td>
+              <td>STU-1003</td>
+              <td>JSS 1A</td>
+              <td>18 Jan 2026</td>
+              <td><span class="status">Active</span></td>
+              <td>
+                <div class="actions">
+                  <button class="action-btn">👁</button>
+                  <button class="action-btn delete-btn" onclick="deleteStudent(this)">🗑</button>
+                </div>
+              </td>
+            </tr>
+
+
+            <tr>
+              <td>
+                <div class="student-info">
+                  <div class="student-avatar">EO</div>
+                  <div>
+                    <div class="student-name">Emeka Okafor</div>
+                    <div class="student-email">emeka@example.com</div>
+                  </div>
+                </div>
+              </td>
+              <td>STU-1004</td>
+              <td>SS 1A</td>
+              <td>22 Jan 2026</td>
+              <td><span class="status">Active</span></td>
+              <td>
+                <div class="actions">
+                  <button class="action-btn">👁</button>
+                  <button class="action-btn delete-btn" onclick="deleteStudent(this)">🗑</button>
+                </div>
+              </td>
+            </tr>
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+    </section>
+
+  </main>
+
+</div>
+
+
+<!-- ADD STUDENT MODAL -->
+
+<div class="modal" id="studentModal">
+
+  <div class="modal-box">
+
+    <div class="modal-header">
+      <h3>Add New Student</h3>
+      <button class="close" onclick="closeModal()">×</button>
+    </div>
+
+    <form onsubmit="addStudent(event)">
+
+      <div class="form-group">
+        <label>Full Name</label>
+        <input
+          type="text"
+          id="studentName"
+          placeholder="Enter student's full name"
+          required
+        >
+      </div>
+
+      <div class="form-group">
+        <label>Email</label>
+        <input
+          type="email"
+          id="studentEmail"
+          placeholder="Enter student's email"
+          required
+        >
+      </div>
+
+      <div class="form-group">
+        <label>Student ID</label>
+        <input
+          type="text"
+          id="studentId"
+          placeholder="e.g. STU-1005"
+          required
+        >
+      </div>
+
+      <div class="form-group">
+        <label>Class</label>
+
+        <select id="studentClass" required>
+          <option value="">Select class</option>
+          <option>JSS 1A</option>
+          <option>JSS 2A</option>
+          <option>JSS 3A</option>
+          <option>SS 1A</option>
+          <option>SS 2B</option>
+        </select>
+      </div>
+
+      <button class="save-btn" type="submit">
+        Add Student
+      </button>
+
+    </form>
+
+  </div>
+
+</div>
+
+
+<script>
+
+  function openModal() {
+    document.getElementById("studentModal").style.display = "flex";
+  }
+
+  function closeModal() {
+    document.getElementById("studentModal").style.display = "none";
+  }
+
+
+  function addStudent(event) {
+
+    event.preventDefault();
+
+    const name =
+      document.getElementById("studentName").value;
+
+    const email =
+      document.getElementById("studentEmail").value;
+
+    const id =
+      document.getElementById("studentId").value;
+
+    const studentClass =
+      document.getElementById("studentClass").value;
+
+    const initials =
+      name
+        .split(" ")
+        .map(word => word[0])
+        .join("")
+        .substring(0, 2)
+        .toUpperCase();
+
+    const today =
+      new Date().toLocaleDateString(
+        "en-GB",
+        {
+          day: "2-digit",
+          month: "short",
+          year: "numeric"
+        }
+      );
+
+    const row = document.createElement("tr");
+
+    row.innerHTML = `
+      <td>
+        <div class="student-info">
+          <div class="student-avatar">${initials}</div>
+
+          <div>
+            <div class="student-name">${name}</div>
+            <div class="student-email">${email}</div>
+          </div>
+        </div>
+      </td>
+
+      <td>${id}</td>
+
+      <td>${studentClass}</td>
+
+      <td>${today}</td>
+
+      <td>
+        <span class="status">Active</span>
+      </td>
+
+      <td>
+        <div class="actions">
+          <button class="action-btn">👁</button>
+
+          <button
+            class="action-btn delete-btn"
+            onclick="deleteStudent(this)"
+          >
+            🗑
+          </button>
+        </div>
+      </td>
+    `;
+
+    document
+      .getElementById("studentTable")
+      .appendChild(row);
+
+    document.querySelector("form").reset();
+
+    closeModal();
+  }
+
+
+  function deleteStudent(button) {
+
+    const confirmDelete =
+      confirm("Are you sure you want to delete this student?");
+
+    if (confirmDelete) {
+      button.closest("tr").remove();
+    }
+  }
+
+
+  function searchStudents() {
+
+    const search =
+      document
+        .getElementById("searchInput")
+        .value
+        .toLowerCase();
+
+    const rows =
+      document.querySelectorAll("#studentTable tr");
+
+    rows.forEach(row => {
+
+      const text =
+        row.innerText.toLowerCase();
+
+      row.style.display =
+        text.includes(search) ? "" : "none";
+
+    });
+  }
+
+
+  function filterClass() {
+
+    const selected =
+      document.getElementById("classFilter").value;
+
+    const rows =
+      document.querySelectorAll("#studentTable tr");
+
+    rows.forEach(row => {
+
+      const className =
+        row.children[2].innerText;
+
+      if (
+        selected === "all" ||
+        className === selected
+      ) {
+        row.style.display = "";
+      } else {
+        row.style.display = "none";
+      }
+
+    });
+  }
+
+</script>
+
+</body>
+  </html>
