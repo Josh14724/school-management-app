@@ -1,6 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+  const SUPABASE_URL = "https://hakyydcvakiqisutknjn.supabase.co";
+  const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_nyfPuNJKYFJ3DmH10oBafQ_qIXrRgzg";
+
+  const supabaseClient = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_PUBLISHABLE_KEY
+  );
+</script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>EduManage | School Management</title>
@@ -338,17 +348,38 @@
   </div>
 
   <script>
-    function loginUser(event) {
-      event.preventDefault();
+  async function loginUser(event) {
+    event.preventDefault();
 
-      const email = document.getElementById("email").value;
-      const role = document.getElementById("role").value;
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value;
 
-      if (email) {
-  window.location.href = "dashboard.html";
-      }
+    if (!email || !password) {
+      alert("Please enter your email and password.");
+      return;
     }
-  </script>
+
+    try {
+      const { data, error } = await supabaseClient.auth.signInWithPassword({
+        email: email,
+        password: password
+      });
+
+      if (error) {
+        alert("Login failed: " + error.message);
+        return;
+      }
+
+      if (data.user) {
+        window.location.href = "dashboard.html";
+      }
+
+    } catch (error) {
+      alert("Something went wrong. Please try again.");
+      console.error(error);
+    }
+  }
+</script>
 
 </body>
   </html>
